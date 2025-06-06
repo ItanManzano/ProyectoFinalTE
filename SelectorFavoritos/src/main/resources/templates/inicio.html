@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Favly</title>
+    <link  rel="icon" type="image/x-icon" th:href="@{/images/icons/FavlyIcon.ico}"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/styles/inicioStyle.css}">
+</head>
+
+<body>
+<!-- Header Section -->
+<div class="header-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="display-5 fw-bold mb-2">
+                    <i class="fas fa-heart text-warning me-2"></i>
+                    Mis Favoritos
+                </h1>
+                <p class="lead mb-0">Gestiona y organiza todos tus elementos favoritos</p>
+            </div>
+            <div class="col-md-4">
+                <div class="stats-card text-center">
+                    <h2 class="mb-0 display-6 fw-bold" th:text="${totalFavoritos}">15</h2>
+                    <p class="mb-0">Total de Favoritos</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Search & Add Section -->
+    <div class="row mb-4 mt-0">
+        <div class="col-lg-8 offset-lg-2">
+            <div class="search-container d-flex align-items-center">
+                <input type="text" class="form-control search-input" id="searchInput" placeholder="Buscar favoritos...">
+                <button class="btn search-btn text-white ms-2">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions Row -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <a href="/favoritos/nuevo" class="btn btn-primary add-btn">
+                <i class="fas fa-plus me-2"></i> Agregar Favorito
+            </a>
+        </div>
+        <div class="col-md-8">
+            <div class="filter-container">
+                <span class="filter-label">Filtrar por categoría:</span>
+                <div class="btn-group d-flex flex-wrap gap-2">
+                    <button class="filter-btn active" data-filter="todos">Todos</button>
+                    <button class="filter-btn" data-filter="album">Álbum</button>
+                    <button class="filter-btn" data-filter="juego">Juego</button>
+                    <button class="filter-btn" data-filter="cancion">Canción</button>
+                    <button class="filter-btn" data-filter="dodogama">Dodogama</button>
+                    <button class="filter-btn" data-filter="deporte">Deporte</button>
+                    <button class="filter-btn" data-filter="equipo">Equipo</button>
+                    <button class="filter-btn" data-filter="pais">País</button>
+                    <button class="filter-btn" data-filter="app">App</button>
+                    <button class="filter-btn" data-filter="marca">Marca</button>
+                    <button class="filter-btn" data-filter="artista">Artista</button>
+                    <button class="filter-btn" data-filter="celebridad">Celebridad</button>
+                    <button class="filter-btn" data-filter="color">Color</button>
+                    <button class="filter-btn" data-filter="estacion">Estación</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Favorites Grid -->
+    <div class="row" id="favoritesGrid">
+        <!-- Ejemplo de tarjeta de favorito -->
+        <div class="col-md-6 col-lg-4 favorite-item" th:each="favorito : ${favoritos}" th:data-category="${favorito.categoria}">
+            <div class="favorite-card h-100">
+                    <span class="category-badge" th:switch="${favorito.categoria}">
+    <span th:case="'ALBUM'" class="bg-primary" th:text="'Álbum'"></span>
+    <span th:case="'JUEGO'" class="bg-secondary" th:text="'Juego'"></span>
+    <span th:case="'CANCION'" class="bg-info text-dark" th:text="'Canción'"></span>
+    <span th:case="'DODOGAMA'" class="bg-warning text-dark" th:text="'Dodogama'"></span>
+    <span th:case="'DEPORTE'" class="bg-danger" th:text="'Deporte'"></span>
+    <span th:case="'EQUIPO'" class="bg-success" th:text="'Equipo'"></span>
+    <span th:case="'PAIS'" class="bg-dark text-white" th:text="'País'"></span>
+    <span th:case="'APP'" class="bg-info text-white" th:text="'APP'"></span>
+    <span th:case="'MARCA'" class="bg-secondary" th:text="'Marca'"></span>
+    <span th:case="'ARTISTA'" class="bg-warning text-dark" th:text="'Artista'"></span>
+    <span th:case="'CELEBRIDAD'" class="bg-danger" th:text="'Celebridad'"></span>
+    <span th:case="'COLOR'" class="bg-success" th:text="'Color'"></span>
+    <span th:case="'ESTACION'" class="bg-primary" th:text="'Estación del Año'"></span>
+    <span th:case="*" class="bg-secondary" th:text="${favorito.categoria}"></span>
+</span>
+
+
+                <span class="date-badge" th:text="${#temporals.format(favorito.fechaCreacion, 'dd/MM/yyyy')}">15/05/2024</span>
+
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${favorito.nombre}">YouTube</h5>
+                    <p class="card-text" th:text="${favorito.descripcion}">
+                        Plataforma de videos más popular del mundo
+                    </p>
+
+                    <a th:if="${favorito.url}" th:href="${favorito.url}" class="url-link" target="_blank">
+                        <i class="fas fa-link"></i>
+                        <span th:text="${favorito.url}">https://youtube.com</span>
+                    </a>
+
+                    <div class="mb-3">
+                        <span th:each="tag : ${#strings.listSplit(favorito.tags, ',')}" class="tag-badge" th:text="${tag}">video</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <a th:href="@{/favoritos/{id}/editar(id=${favorito.id})}" class="action-btn edit-btn" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a th:href="@{/favoritos/{id}/eliminar(id=${favorito.id})}" class="action-btn delete-btn" title="Eliminar">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Estado vacío -->
+        <div class="col-12" id="emptyState" th:if="${#lists.isEmpty(favoritos)}">
+            <div class="empty-state">
+                <i class="fas fa-heart-broken empty-icon"></i>
+                <h3 class="empty-title">No tienes favoritos aún</h3>
+                <p class="empty-text">Comienza agregando tus sitios web, películas, libros o música favorita</p>
+                <a href="/favoritos/nuevo" class="btn btn-primary first-add-btn">
+                    <i class="fas fa-plus me-2"></i> Agregar tu primer favorito
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div th:fragment="jsfields">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.min.js" integrity="sha384-RuyvpeZCxMJCqVUGFI0Do1mQrods/hhxYlcVfGPOfQtPJh0JCw12tUAZ/Mv10S7D" crossorigin="anonymous"></script>
+    <script th:src="@{/js/Busqueda.js}"></script>
+</div>
+
+</body>
+</html>
